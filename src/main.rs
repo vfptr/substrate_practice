@@ -1,34 +1,44 @@
-use rand::Rng;
+use substrate_practice::traffic_sigal::{LightsDuration, Signal};
+use substrate_practice::shape::{Circle, Triangle, Square, self};
 
-// Bubbling sort, support input parameter which implement ParitalOrd trait
-fn bubbling_sort<T: PartialOrd>(arr: &mut [T]) {
-    let len = arr.len(); 
-
-    // This loop controls the number of rounds in the sorting process. 
-    // In each round, the largest unsorted element is moved to the end.
-    for round in 0..len {
-        // This loop compares adjacent elements and swaps them 
-        // In each round, the largest unsorted element is moved to the end of the unsorted portion.
-        for index in 0..len - round - 1 {
-            if arr[index] > arr[index + 1] {
-                // If the current element is greater than the next element, swap the elements
-                arr.swap(index, index + 1);
-            }
+// Calculate the sum of u32 integers
+fn sum(arr: &[u32]) -> Option<u32> {
+    let mut sum = 0u32;
+    for &i in arr {
+        // check whether the result is overflow.
+        if let Some(result) = sum.checked_add(i) {
+            sum = result;
+        } else {
+            return None;
         }
     }
+    Some(sum)
 }
 
-fn main() {
-    let mut rng = rand::thread_rng();
-    // Generate a random array length between 5 and 10
-    let array_length = rng.gen_range(5..=10); 
 
-    let mut arr = Vec::new();
-    for _ in 0..array_length {
-        // Generate a random integer between 1 and 1000
-        arr.push(rng.gen_range(1..=1000)); 
+fn main(){
+    // Question 1.
+    println!("\nResult For Question 1:");
+    let arr = vec![Signal::Red(10), Signal::Yellow(3), Signal::Green(60)];
+    for i in arr {
+       println!("{:?}, lights duration = {}", i, i.duration()) 
     }
-    println!("input arr: {:?}", arr); 
-    bubbling_sort(&mut arr);
-    println!("result after sort: {:?}", arr); 
+
+    // Question 2.
+    println!("\nResult For Question 2:");
+    let numbers = [1, 2, 3, 4, 5];
+    print!("{:?}", numbers);
+    match sum(&numbers) {
+        Some(result) => println!("sum result = {}", result),
+        None => ()
+    }
+    
+    // Question 3.
+    println!("\nResult For Question 3:");
+    let circle = Circle{radius:5.0};
+    let triangle = Triangle{base: 10.1, height: 5.2};
+    let square = Square{side: 1.735};
+    shape::print_area(&circle);
+    shape::print_area(&triangle);
+    shape::print_area(&square);
 }
